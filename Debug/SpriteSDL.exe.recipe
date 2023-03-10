@@ -2,7 +2,11 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
+<<<<<<< Updated upstream
       <FullPath>C:\Users\adriarj\Documents\GitHub\Abuela-Invaders\Debug\SpriteSDL.exe</FullPath>
+=======
+      <FullPath>C:\Users\didacpm\Documents\GitHub\Abuela-Invaders\Debug\SpriteSDL.exe</FullPath>
+>>>>>>> Stashed changes
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

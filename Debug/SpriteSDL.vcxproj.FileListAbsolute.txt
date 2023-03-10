@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 C:\Users\adriarj\Downloads\SpriteSDL\Debug\SpriteSDL.exe
 C:\Users\usuari\Desktop\SpriteSDL\Debug\SpriteSDL.exe
 C:\Users\didacpm\Downloads\SpriteSDL\Debug\SpriteSDL.exe
 C:\Users\adriarj\Documents\GitHub\Abuela-Invaders\Debug\SpriteSDL.exe
+=======
+C:\Users\didacpm\Documents\GitHub\Abuela-Invaders\Debug\SpriteSDL.exe
+>>>>>>> Stashed changes

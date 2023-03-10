@@ -45,7 +45,7 @@ bool Game::Init()
 	
 	IMG_Init(IMG_INIT_PNG);
 	// Cargar el archivo PNG como superficie
-	SDL_Surface* spriteSurface = IMG_Load("abuela3.png");
+	SDL_Surface* spriteSurface = IMG_Load("C:/Users/didacpm/Documents/GitHub/Abuela-Invaders/Game/assets/abuela3.png");
 	
 	// Crear una textura a partir de la superficie
 	spriteTexture = SDL_CreateTextureFromSurface(Renderer, spriteSurface);
@@ -53,12 +53,12 @@ bool Game::Init()
 	SDL_FreeSurface(spriteSurface);
 
 	//DISPAROS
-	SDL_Surface* shootSurface = IMG_Load("aguacate.png");
+	SDL_Surface* shootSurface = IMG_Load("C:/Users/didacpm/Documents/GitHub/Abuela-Invaders/Game/assets/aguacate.png");
 	shooting = SDL_CreateTextureFromSurface(Renderer, shootSurface);
 	SDL_FreeSurface(shootSurface);
 
 	//BACKGROUNG
-	SDL_Surface* backgSurface = IMG_Load("background.png");
+	SDL_Surface* backgSurface = IMG_Load("C:/Users/didacpm/Documents/GitHub/Abuela-Invaders/Game/assets/background.png");
 	background = SDL_CreateTextureFromSurface(Renderer, backgSurface);
 	SDL_FreeSurface(backgSurface);
 

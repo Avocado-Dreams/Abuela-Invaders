@@ -1,6 +1,11 @@
+<<<<<<< Updated upstream
 ﻿  Entity.cpp
   Game.cpp
   main.cpp
   Generating Code...
   LINK : C:\Users\adriarj\Documents\GitHub\Abuela-Invaders\Debug\SpriteSDL.exe not found or not built by the last incremental link; performing full link
   SpriteSDL.vcxproj -> C:\Users\adriarj\Documents\GitHub\Abuela-Invaders\Debug\SpriteSDL.exe
+=======
+﻿  Game.cpp
+  SpriteSDL.vcxproj -> C:\Users\didacpm\Documents\GitHub\Abuela-Invaders\Debug\SpriteSDL.exe
+>>>>>>> Stashed changes
