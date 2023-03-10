@@ -1,1 +1,2 @@
 C:\Users\didacpm\Documents\GitHub\Abuela-Invaders\Debug\SpriteSDL.exe
+C:\Users\usuari\Documents\GitHub\Abuela-Invaders\Debug\SpriteSDL.exe
