@@ -28,9 +28,17 @@ int Entity::GetX()
 {
 	return x;
 }
+int Entity::GetY()
+{
+	return y;
+}
 int Entity::GetWidth()
 {
 	return width;
+}
+int Entity::GetHeight()
+{
+	return height;
 }
 void Entity::SetX(int posx)
 {
@@ -49,4 +57,20 @@ void Entity::Move(int dx, int dy)
 {
 	x += dx * speed;
 	y += dy * speed;
+}
+void Entity::EnemyReciveDamage(int damage, Entity &enemy)
+{
+	enemy.enemyLife -= damage;
+	if (enemyLife <= 0)
+	{
+		enemy.ShutDown();
+	}	
+}
+void Entity::PlayerReciveDamage(int damag, Entity& player)
+{
+	player.abuelaLife -= damag;
+	if (abuelaLife <= 0)
+	{
+		player.ShutDown();
+	}
 }

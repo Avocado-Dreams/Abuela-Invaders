@@ -1,5 +1,6 @@
 #include "Game.h"
 #include <math.h>
+#include <random>
 
 Game::Game() {}
 Game::~Game(){}
@@ -36,9 +37,35 @@ bool Game::Init()
 	int w;
 	SDL_QueryTexture(background, NULL, NULL, &w, NULL);
 	scene.Init(0, 0, w, WINDOW_HEIGHT, 4);
-	god_mode = false;	
-	
-	
+	god_mode = false;
+
+	std::vector<Entity> enemigos;
+
+	int valor = 500;
+	for (int i = 0; i < 10; i++)
+	{
+		Enemy[i].Init(valor, 50, 32, 32, 2);
+		valor += 50;
+	}
+	valor = 500;
+	for (int i = 10; i < 20; i++)
+	{
+		Enemy[i].Init(valor, 100, 32, 32, 2);
+		valor += 50;
+	}
+	valor = 500;
+	for (int i = 20; i < 30; i++)
+	{
+		Enemy[i].Init(valor, 150, 32, 32, 2);
+		valor += 50;
+	}
+	valor = 500;
+	for (int i = 30; i < 40; i++)
+	{
+		Enemy[i].Init(valor, 200, 32, 32, 2);
+		valor += 50;
+	}
+		
 	/*------------|--------|-----------------/
 	/-------------|-IMAGES-|-----------------/
 	/-------------|--------|----------------*/
@@ -62,15 +89,29 @@ bool Game::Init()
 	background = SDL_CreateTextureFromSurface(Renderer, backgSurface);
 	SDL_FreeSurface(backgSurface);
 
+	//ROBOT
+	SDL_Surface* robotSurface = IMG_Load("assets/robot.png");
+	robot = SDL_CreateTextureFromSurface(Renderer, robotSurface);
+	SDL_FreeSurface(robotSurface);
+
+	//LASER
+	SDL_Surface* laserSurface = IMG_Load("assets/laserRobot.png");
+	laser = SDL_CreateTextureFromSurface(Renderer, laserSurface);
+	SDL_FreeSurface(laserSurface);
+
+
 	return true;
 
 }
+
 void Game::Release()
 {
 	//Clean up all SDL initialized subsystems
 	SDL_DestroyTexture(spriteTexture);
 	SDL_DestroyTexture(shooting);
 	SDL_DestroyTexture(background);
+	SDL_DestroyTexture(robot);
+	SDL_DestroyTexture(laser);
 	IMG_Quit();
 	SDL_Quit();
 
@@ -96,11 +137,12 @@ bool Game::Input()
 	return true;
 	
 }
+
 bool Game::Update()
 {
 	//Read Input
 	if (!Input())	return true;
-
+	
 	//Process Input
 	int fx = 0, fy = 0;
 	if (keys[SDL_SCANCODE_ESCAPE] == KEY_DOWN)	return true;
@@ -138,6 +180,121 @@ bool Game::Update()
 			if (Shots[i].GetX() > WINDOW_WIDTH)	Shots[i].ShutDown();
 		}
 	}
+	//COLISION BALAS/ENEMIGOS
+	for (int i = 0; i < MAX_SHOTS; i++)
+	{
+		int x, y, w, h;
+		SDL_Rect shotRect = {Shots[i].GetX(),Shots[i].GetY(),Shots[i].GetWidth(),Shots[i].GetHeight()};
+		SDL_Rect playerRect = { Player.GetX(),Player.GetY(),Player.GetWidth(),Player.GetHeight() };
+		SDL_Rect enemyShotRect = { enemyShots[i].GetX(),enemyShots[i].GetY(),enemyShots[i].GetWidth(),enemyShots[i].GetHeight() };
+		
+		for (int j = 0; j < MAX_ENEMIES; j++)
+		{
+			SDL_Rect enemyRect = { Enemy[j].GetX(),Enemy[j].GetY(),Enemy[j].GetWidth(),Enemy[j].GetHeight() };
+			if (SDL_HasIntersection(&enemyRect, &shotRect))
+			{
+				Enemy[j].EnemyReciveDamage(Shots[i].damage, Enemy[j]);
+				Shots[i].ShutDown();
+			}
+		}
+		if (SDL_HasIntersection(&playerRect, &enemyShotRect))
+		{
+			Player.PlayerReciveDamage(enemyShots[i].damage, Player);
+			enemyShots[i].ShutDown();
+		}
+
+		//ELIMINAR ABUELA
+		if (Player.IsAlive()==false)
+		{
+			SDL_DestroyTexture(spriteTexture);
+			
+		}
+		
+		//ELIMINAR ENEMIGOS
+		int index = -1; // Variable para almacenar el índice del objeto a eliminar
+		for (int i = 0; i < MAX_ENEMIES; i++) {
+			if (!Enemy[i].IsAlive()) {
+				index = i; // Guardar el índice del objeto a eliminar
+				break;
+			}
+		}
+		if (index != -1) { // Si se encontró un objeto para eliminar
+			// Mover los elementos posteriores una posición hacia atrás
+			for (int i = index; i < MAX_ENEMIES-1; i++) {
+				Enemy[i] = Enemy[i + 1];
+			}
+			// El último elemento debe ser eliminado o reinicializado para evitar duplicados
+			Enemy[MAX_ENEMIES-1] = Entity();
+		}
+
+		//ELIMINAR BALA
+		index = -1;
+		for (int i = 0; i < MAX_SHOTS; i++) {
+			if (!Shots[i].IsAlive()) {
+				index = i; // Guardar el índice del objeto a eliminar
+				break;
+			}
+		}
+		if (index != -1) { // Si se encontró un objeto para eliminar
+			// Mover los elementos posteriores una posición hacia atrás
+			for (int i = index; i < MAX_SHOTS-1; i++) {
+				Shots[i] = Shots[i + 1];
+			}
+			// El último elemento debe ser eliminado o reinicializado para evitar duplicados
+			Shots[MAX_SHOTS -1] = Entity();
+		}
+
+		//ELIMINAR BALA ENEMIGA
+		index = -1;
+		for (int i = 0; i < MAX_SHOTS; i++) {
+			if (!enemyShots[i].IsAlive()) {
+				index = i; // Guardar el índice del objeto a eliminar
+				break;
+			}
+		}
+		if (index != -1) { // Si se encontró un objeto para eliminar
+			// Mover los elementos posteriores una posición hacia atrás
+			for (int i = index; i < MAX_SHOTS - 1; i++) {
+				enemyShots[i] = enemyShots[i + 1];
+			}
+			// El último elemento debe ser eliminado o reinicializado para evitar duplicados
+			enemyShots[MAX_SHOTS - 1] = Entity();
+		}
+	}
+		
+	//Enemy move
+	
+	for (int i = 0; i < 40; i++) {
+		Enemy[i].Move(fxRob, 0);
+		if (fxRob == 1 && Enemy[i].GetX() == 1000)
+		{
+			fxRob = -1;
+		}
+		else if (fxRob == -1 && Enemy[i].GetX() == 230)
+		{
+			fxRob = 1;
+		}
+		if (rand() % 5000 == 0)
+		{
+			int x, y, w, h;
+			Enemy[i].GetRect(&x, &y, &w, &h);
+			enemyShots[idx_shot].Init(x + w - 44, y + (h >> 1) - 33, 25, 25, -10);
+			idx_shot++;
+			idx_shot %= MAX_SHOTS;
+		}
+	}
+
+	for (int i = 0; i < MAX_SHOTS; ++i)
+	{
+		if (enemyShots[i].IsAlive())
+		{
+			enemyShots[i].Move(0, -1);
+			if (Shots[i].GetX() > WINDOW_WIDTH)	Shots[i].ShutDown();
+		}
+	}
+			
+	
+	
 		
 	return false;
 }
@@ -173,9 +330,21 @@ void Game::Draw()
 		}
 	}
 
-	Player.GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
-	SDL_RenderCopy(Renderer, spriteTexture, NULL, &rc);
-	if (god_mode) SDL_RenderDrawRect(Renderer, &rc);
+	for (int i = 0; i < MAX_ENEMIES; i++) {
+		Enemy[i].GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
+		SDL_RenderCopy(Renderer, robot, NULL, &rc);
+		if (god_mode) SDL_RenderDrawRect(Renderer, &rc);
+	}
+	for (int i = 0; i < MAX_SHOTS; i++)
+	{
+		if (enemyShots[i].IsAlive())
+		{
+			enemyShots[i].GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
+			SDL_RenderCopy(Renderer,laser , NULL, &rc);
+			if (god_mode) SDL_RenderDrawRect(Renderer, &rc);
+		}
+	}
+	
 
 	//Update screen
 	SDL_RenderPresent(Renderer);

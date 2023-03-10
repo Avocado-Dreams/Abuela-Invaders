@@ -2,6 +2,7 @@
 
 #include "SDL/include/SDL.h"
 #include "SDL/include/SDL.h"
+#include <vector>
 #pragma comment( lib, "SDL/libx86/SDL2.lib" )
 #pragma comment( lib, "SDL/libx86/SDL2main.lib" )
 #include "SDL_image/include/SDL_image.h"
@@ -10,10 +11,12 @@
 
 
 
+
 #define WINDOW_WIDTH	1249
 #define WINDOW_HEIGHT	512
 #define MAX_KEYS		256
-#define MAX_SHOTS		32
+#define MAX_SHOTS		200
+#define MAX_ENEMIES		40
 
 class Game
 {
@@ -27,6 +30,7 @@ public:
 	bool Input();
 	bool Update();
 	void Draw();
+	
 
 private:
 	SDL_Window *Window;
@@ -34,9 +38,13 @@ private:
 	SDL_Texture* spriteTexture;
 	SDL_Texture* shooting;
 	SDL_Texture* background;
+	SDL_Texture* robot;
+	SDL_Texture* laser;
 
-	Entity Player, Shots[MAX_SHOTS], scene;
+	Entity Player, Shots[MAX_SHOTS], scene, Enemy[40], enemyShots[MAX_SHOTS];
+	/*std::vector<Entity> enemigos;*/
 	int idx_shot;
+	int fxRob = 1;
 
 	bool god_mode;
 
