@@ -173,6 +173,10 @@ void Game::Draw()
 		}
 	}
 
+	Player.GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
+	SDL_RenderCopy(Renderer, spriteTexture, NULL, &rc);
+	if (god_mode) SDL_RenderDrawRect(Renderer, &rc);
+
 	//Update screen
 	SDL_RenderPresent(Renderer);
 
