@@ -1,0 +1,3 @@
+C:\Users\adriarj\Downloads\SpriteSDL\Debug\SpriteSDL.exe
+C:\Users\usuari\Desktop\SpriteSDL\Debug\SpriteSDL.exe
+C:\Users\didacpm\Downloads\SpriteSDL\Debug\SpriteSDL.exe
