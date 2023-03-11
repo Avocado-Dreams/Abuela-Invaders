@@ -27,6 +27,7 @@ bool Game::Init()
 		SDL_Log("Unable to create rendering context: %s", SDL_GetError());
 		return false;
 	}
+
 	//Initialize keys array
 	for (int i = 0; i < MAX_KEYS; ++i)
 		keys[i] = KEY_IDLE;
@@ -98,7 +99,6 @@ bool Game::Init()
 	SDL_Surface* laserSurface = IMG_Load("assets/laserRobot.png");
 	laser = SDL_CreateTextureFromSurface(Renderer, laserSurface);
 	SDL_FreeSurface(laserSurface);
-
 
 	return true;
 
@@ -205,9 +205,8 @@ bool Game::Update()
 
 		//ELIMINAR ABUELA
 		if (Player.IsAlive()==false)
-		{
-			SDL_DestroyTexture(spriteTexture);
-			 
+		{			
+			SDL_DestroyTexture(spriteTexture);	
 		}
 		
 		//ELIMINAR ENEMIGOS
@@ -309,7 +308,7 @@ void Game::Draw()
 
 	if (god_mode) SDL_SetRenderDrawColor(Renderer, 192, 0, 0, 255);
 
-	scene.GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
+	
 	SDL_RenderCopy(Renderer, background, NULL, NULL);
 	
 

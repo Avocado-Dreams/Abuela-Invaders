@@ -34,6 +34,7 @@ public:
 
 private:
 	SDL_Window *Window;
+	SDL_Window* gameOverWindow;
 	SDL_Renderer *Renderer;
 	SDL_Texture* spriteTexture;
 	SDL_Texture* shooting;
