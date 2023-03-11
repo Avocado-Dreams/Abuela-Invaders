@@ -41,9 +41,9 @@ private:
 	SDL_Texture* background;
 	SDL_Texture* robot;
 	SDL_Texture* laser;
+	SDL_Texture* nube;
 
-	Entity Player, Shots[MAX_SHOTS], scene, Enemy[40], enemyShots[MAX_SHOTS];
-	/*std::vector<Entity> enemigos;*/
+	Entity Player, Shots[MAX_SHOTS], scene, Enemy[40], enemyShots[MAX_SHOTS], nubes[120];
 	int idx_shot;
 	int fxRob = 1;
 

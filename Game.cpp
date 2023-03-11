@@ -40,33 +40,44 @@ bool Game::Init()
 	scene.Init(0, 0, w, WINDOW_HEIGHT, 4);
 	god_mode = false;
 
-	std::vector<Entity> enemigos;
+	//INIT ENEMIGOS
 
-	int valor = 500;
-	for (int i = 0; i < 10; i++)
+	int valorX = 500;
+	int valorY = 50;
+	for (int i = 0; i < 40; i++)
 	{
-		Enemy[i].Init(valor, 50, 32, 32, 2);
-		valor += 50;
+		Enemy[i].Init(valorX, valorY, 32, 32, 2);
+		valorX += 50;
+		if (i == 9 || i == 19 || i == 29 || i == 39)
+		{
+			valorX = 500;
+			valorY += 50;
+		}
 	}
-	valor = 500;
-	for (int i = 10; i < 20; i++)
+	//INIT NUBES
+	int total = 0;
+	valorX = 300;
+	valorY = 400;
+	int xMod = 300;
+
+	for (int i = 0; i < 4; i++)
 	{
-		Enemy[i].Init(valor, 100, 32, 32, 2);
-		valor += 50;
+		valorY = 400;
+		for (int j = 0; j < 3; j++)
+		{
+			valorX = xMod;
+			valorY += 8;
+			for (int k = total; k < total + 10; k++)
+			{
+				nubes[k].Init(valorX, valorY, 20, 20, 5);
+				valorX += 8;
+			}
+			total += 10;
+		}
+		xMod += 200;
 	}
-	valor = 500;
-	for (int i = 20; i < 30; i++)
-	{
-		Enemy[i].Init(valor, 150, 32, 32, 2);
-		valor += 50;
-	}
-	valor = 500;
-	for (int i = 30; i < 40; i++)
-	{
-		Enemy[i].Init(valor, 200, 32, 32, 2);
-		valor += 50;
-	}
-		
+	
+
 	/*------------|--------|-----------------/
 	/-------------|-IMAGES-|-----------------/
 	/-------------|--------|----------------*/
@@ -100,6 +111,11 @@ bool Game::Init()
 	laser = SDL_CreateTextureFromSurface(Renderer, laserSurface);
 	SDL_FreeSurface(laserSurface);
 
+	//NUBE
+	SDL_Surface* nubeSurface = IMG_Load("assets/nube.png");
+	nube = SDL_CreateTextureFromSurface(Renderer, nubeSurface);
+	SDL_FreeSurface(nubeSurface);
+
 	return true;
 
 }
@@ -112,6 +128,7 @@ void Game::Release()
 	SDL_DestroyTexture(background);
 	SDL_DestroyTexture(robot);
 	SDL_DestroyTexture(laser);
+	SDL_DestroyTexture(nube);
 	IMG_Quit();
 	SDL_Quit();
 
@@ -181,13 +198,29 @@ bool Game::Update()
 		}
 	}
 	//COLISION BALAS/ENEMIGOS
+	int x, y, w, h;
 	for (int i = 0; i < MAX_SHOTS; i++)
 	{
-		int x, y, w, h;
+		
 		SDL_Rect shotRect = {Shots[i].GetX(),Shots[i].GetY(),Shots[i].GetWidth(),Shots[i].GetHeight()};
 		SDL_Rect playerRect = { Player.GetX(),Player.GetY(),Player.GetWidth(),Player.GetHeight() };
 		SDL_Rect enemyShotRect = { enemyShots[i].GetX(),enemyShots[i].GetY(),enemyShots[i].GetWidth(),enemyShots[i].GetHeight() };
 		
+		for (int j = 0; j < 120; j++)
+		{
+			SDL_Rect nuvesRect = { nubes[j].GetX(),nubes[j].GetY(),nubes[j].GetWidth(),nubes[j].GetHeight() };
+			if (SDL_HasIntersection(&nuvesRect, &shotRect))
+			{
+				Shots[i].ShutDown();
+				nubes[j].EnemyReciveDamage(Shots[i].damage, nubes[j]);
+			}
+			if (SDL_HasIntersection(&nuvesRect, &enemyShotRect))
+			{
+				enemyShots[i].ShutDown();
+				nubes[j].EnemyReciveDamage(Shots[i].damage, nubes[j]);
+			}
+		}
+
 		for (int j = 0; j < MAX_ENEMIES; j++)
 		{
 			SDL_Rect enemyRect = { Enemy[j].GetX(),Enemy[j].GetY(),Enemy[j].GetWidth(),Enemy[j].GetHeight() };
@@ -226,6 +259,23 @@ bool Game::Update()
 			Enemy[MAX_ENEMIES-1] = Entity();
 		}
 
+		//ELIMINAR NUBES
+		index = -1; // Variable para almacenar el índice del objeto a eliminar
+		for (int i = 0; i < 120; i++) {
+			if (!nubes[i].IsAlive()) {
+				index = i; // Guardar el índice del objeto a eliminar
+				break;
+			}
+		}
+		if (index != -1) { // Si se encontró un objeto para eliminar
+			// Mover los elementos posteriores una posición hacia atrás
+			for (int i = index; i < 120 - 1; i++) {
+				nubes[i] = nubes[i + 1];
+			}
+			// El último elemento debe ser eliminado o reinicializado para evitar duplicados
+			nubes[120 - 1] = Entity();
+		}
+
 		//ELIMINAR BALA
 		index = -1;
 		for (int i = 0; i < MAX_SHOTS; i++) {
@@ -260,6 +310,7 @@ bool Game::Update()
 			enemyShots[MAX_SHOTS - 1] = Entity();
 		}
 	}
+	
 		
 	//Enemy move
 	
@@ -273,7 +324,7 @@ bool Game::Update()
 		{
 			fxRob = 1;
 		}
-		if (rand() % 5000 == 0)
+		if (rand() % 1000 == 0)
 		{
 			int x, y, w, h;
 			Enemy[i].GetRect(&x, &y, &w, &h);
@@ -329,11 +380,14 @@ void Game::Draw()
 		}
 	}
 
+	//DRAW ENEMY
+
 	for (int i = 0; i < MAX_ENEMIES; i++) {
 		Enemy[i].GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
 		SDL_RenderCopy(Renderer, robot, NULL, &rc);
 		if (god_mode) SDL_RenderDrawRect(Renderer, &rc);
 	}
+	//DRAW ENEMY SHOTS
 	for (int i = 0; i < MAX_SHOTS; i++)
 	{
 		if (enemyShots[i].IsAlive())
@@ -343,7 +397,13 @@ void Game::Draw()
 			if (god_mode) SDL_RenderDrawRect(Renderer, &rc);
 		}
 	}
-	
+
+	//DRAW NUBES
+	for (int i = 0; i < 120; i++) {
+		nubes[i].GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
+		SDL_RenderCopy(Renderer, nube, NULL, &rc);
+		if (god_mode) SDL_RenderDrawRect(Renderer, &rc);
+	}
 
 	//Update screen
 	SDL_RenderPresent(Renderer);
