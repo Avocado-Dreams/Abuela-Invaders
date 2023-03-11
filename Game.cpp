@@ -207,7 +207,7 @@ bool Game::Update()
 		if (Player.IsAlive()==false)
 		{
 			SDL_DestroyTexture(spriteTexture);
-			
+			 
 		}
 		
 		//ELIMINAR ENEMIGOS
