@@ -3,6 +3,4 @@ C:\Users\usuari\Documents\GitHub\Abuela-Invaders\Game.cpp(186,10): warning C4101
 C:\Users\usuari\Documents\GitHub\Abuela-Invaders\Game.cpp(186,7): warning C4101: 'x': variable local sin referencia
 C:\Users\usuari\Documents\GitHub\Abuela-Invaders\Game.cpp(186,16): warning C4101: 'h': variable local sin referencia
 C:\Users\usuari\Documents\GitHub\Abuela-Invaders\Game.cpp(186,13): warning C4101: 'w': variable local sin referencia
-  main.cpp
-  Generando código...
   SpriteSDL.vcxproj -> C:\Users\usuari\Documents\GitHub\Abuela-Invaders\Debug\SpriteSDL.exe
