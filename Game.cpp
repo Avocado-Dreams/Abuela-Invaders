@@ -5,6 +5,10 @@
 Game::Game() {}
 Game::~Game(){}
 
+Mix_Chunk* avocadoSound;
+Mix_Chunk* laserSound;
+Mix_Chunk* deathSound;
+
 bool Game::Init()
 
 {
@@ -116,9 +120,19 @@ bool Game::Init()
 	nube = SDL_CreateTextureFromSurface(Renderer, nubeSurface);
 	SDL_FreeSurface(nubeSurface);
 
+	//AUDIO
+	Mix_OpenAudio(44100, AUDIO_S16SYS, 2, 1024);
+	Mix_AllocateChannels(4);
+	Mix_Music* music = Mix_LoadMUS("Sounds/Lacrimosa.wav");
+	avocadoSound = Mix_LoadWAV("Sounds/Avocado.wav");
+	laserSound = Mix_LoadWAV("Sounds/Laser.wav");
+	deathSound = Mix_LoadWAV("Sounds/Death.wav");
+	Mix_PlayMusic(music, -1);
+
 	return true;
 
 }
+bool firstTime = true;
 
 void Game::Release()
 {
@@ -183,7 +197,7 @@ bool Game::Update()
 		Shots[idx_shot].Init(x + w - 44, y + (h >> 1) - 33, 25, 25, -10);
 		idx_shot++;
 		idx_shot %= MAX_SHOTS;
-		
+		Mix_PlayChannel(-1, avocadoSound, 0);
 	}
 
 	//Player update
@@ -240,6 +254,12 @@ bool Game::Update()
 		if (Player.IsAlive()==false)
 		{			
 			SDL_DestroyTexture(spriteTexture);	
+		}
+
+		if (Player.IsAlive() == false && firstTime)
+		{
+			Mix_PlayChannel(-1, deathSound, 0);
+			firstTime = false;
 		}
 		
 		//ELIMINAR ENEMIGOS
@@ -331,6 +351,7 @@ bool Game::Update()
 			enemyShots[idx_shot].Init(x + w - 44, y + (h >> 1) - 33, 25, 25, -10);
 			idx_shot++;
 			idx_shot %= MAX_SHOTS;
+			Mix_PlayChannel(-1, laserSound, 0);
 		}
 	}
 
@@ -342,12 +363,9 @@ bool Game::Update()
 			if (Shots[i].GetX() > WINDOW_WIDTH)	Shots[i].ShutDown();
 		}
 	}
-			
-	
-	
-		
 	return false;
 }
+
 void Game::Draw()
 {
 	SDL_Rect rc;
