@@ -254,6 +254,7 @@ bool Game::Update()
 		if (Player.IsAlive()==false)
 		{			
 			SDL_DestroyTexture(spriteTexture);	
+			return true;
 		}
 
 		if (Player.IsAlive() == false && firstTime)

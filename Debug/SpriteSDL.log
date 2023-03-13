@@ -1,6 +1,6 @@
 ﻿  Game.cpp
-C:\Users\rebec\Downloads\Abuela-Invaders-main\Abuela-Invaders-main\Game.cpp(215,9): warning C4101: 'y': variable local sin referencia
-C:\Users\rebec\Downloads\Abuela-Invaders-main\Abuela-Invaders-main\Game.cpp(215,6): warning C4101: 'x': variable local sin referencia
-C:\Users\rebec\Downloads\Abuela-Invaders-main\Abuela-Invaders-main\Game.cpp(215,15): warning C4101: 'h': variable local sin referencia
-C:\Users\rebec\Downloads\Abuela-Invaders-main\Abuela-Invaders-main\Game.cpp(215,12): warning C4101: 'w': variable local sin referencia
-  SpriteSDL.vcxproj -> C:\Users\rebec\Downloads\Abuela-Invaders-main\Abuela-Invaders-main\Debug\SpriteSDL.exe
+C:\Users\adriarj\Documents\GitHub\Abuela-Invaders\Game.cpp(215,9): warning C4101: 'y': unreferenced local variable
+C:\Users\adriarj\Documents\GitHub\Abuela-Invaders\Game.cpp(215,6): warning C4101: 'x': unreferenced local variable
+C:\Users\adriarj\Documents\GitHub\Abuela-Invaders\Game.cpp(215,15): warning C4101: 'h': unreferenced local variable
+C:\Users\adriarj\Documents\GitHub\Abuela-Invaders\Game.cpp(215,12): warning C4101: 'w': unreferenced local variable
+  SpriteSDL.vcxproj -> C:\Users\adriarj\Documents\GitHub\Abuela-Invaders\Debug\SpriteSDL.exe
