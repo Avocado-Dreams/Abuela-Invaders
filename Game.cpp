@@ -254,7 +254,7 @@ bool Game::Update()
 		if (Player.IsAlive()==false)
 		{			
 			SDL_DestroyTexture(spriteTexture);	
-			return true;
+			/*return true;*/
 		}
 
 		if (Player.IsAlive() == false && firstTime)
@@ -345,7 +345,7 @@ bool Game::Update()
 		{
 			fxRob = 1;
 		}
-		if (rand() % 1000 == 0)
+		if (rand() % 2000 == 0)
 		{
 			int x, y, w, h;
 			Enemy[i].GetRect(&x, &y, &w, &h);
